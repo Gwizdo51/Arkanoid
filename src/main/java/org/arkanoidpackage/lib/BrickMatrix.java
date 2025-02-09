@@ -41,7 +41,7 @@ public class BrickMatrix implements GameEntity {
                 }
                 break;
             case 0:
-                // 5 full rows
+                // gradient (5 full rows)
                 // top row: 5 lives bricks
                 // bottom row: 1 life bricks
                 for (int[] brickColumn : brickLayout) {
@@ -67,6 +67,38 @@ public class BrickMatrix implements GameEntity {
                         brickColumn[indexRow] = 5;
                     }
                 }
+                break;
+            case 3:
+                // diamond
+                // start from the first 2 columns and expand left and right
+                Point startCoordinates = new Point(6, 5);
+                int counterColumn = 0;
+                while (true) {
+                    int currentHP = 5 - counterColumn;
+                    if (currentHP == 0) {
+                        break;
+                    }
+                    // middle bricks
+                    brickLayout[(int) startCoordinates.x - counterColumn][(int) startCoordinates.y] = currentHP;
+                    brickLayout[(int) startCoordinates.x + 1 + counterColumn][(int) startCoordinates.y] = currentHP;
+                    // expand up and down
+                    currentHP--;
+                    int counterRow = 1;
+                    while (currentHP != 0) {
+                        // left column up
+                        brickLayout[(int) startCoordinates.x - counterColumn][(int) startCoordinates.y - counterRow] = currentHP;
+                        // left column down
+                        brickLayout[(int) startCoordinates.x - counterColumn][(int) startCoordinates.y + counterRow] = currentHP;
+                        // right column up
+                        brickLayout[(int) startCoordinates.x + 1 + counterColumn][(int) startCoordinates.y - counterRow] = currentHP;
+                        // right column down
+                        brickLayout[(int) startCoordinates.x + 1 + counterColumn][(int) startCoordinates.y + counterRow] = currentHP;
+                        currentHP--;
+                        counterRow++;
+                    }
+                    counterColumn++;
+                }
+                break;
         }
         return brickLayout;
     }
